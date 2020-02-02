@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use App\Reply;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class ReplyTest extends TestCase
 {
@@ -15,7 +15,6 @@ class ReplyTest extends TestCase
     {
         /** @var Reply $reply */
         $reply = factory('App\Reply')->create();
-
         $this->assertInstanceOf('App\User', $reply->owner);
     }
 }

@@ -26,9 +26,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Reply[] $replies
  * @property-read int|null $replies_count
+ * @property-read int|null $creator
  */
 class Thread extends Model
 {
+
+    protected $guarded =[];
     /**
      * @return string
      */
@@ -44,4 +47,15 @@ class Thread extends Model
     {
        return $this->hasMany(Reply::class);
     }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
+
+    public function addReply($reply)
+    {
+        $this->replies()->create($reply);
+    }
+
 }
