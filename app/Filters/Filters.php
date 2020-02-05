@@ -15,6 +15,7 @@ abstract class Filters
     protected $request;
     /** @var Builder */
     protected $builder;
+    /** @var array  */
     protected $filters = ['by'];
 
 

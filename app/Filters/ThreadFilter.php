@@ -9,13 +9,22 @@ use Illuminate\Http\Request;
 class ThreadFilter extends Filters
 {
 
-    protected $filters = ['by'];
+    protected $filters = ['by','popular'];
     /**
-     * @param $userName
+     * @param string $userName
      */
     public function by($userName)
     {
         $user = User::whereName($userName)->firstOrFail();
         $this->builder->where('user_id', $user->id);
+    }
+
+    /**
+     * @return Builder
+     */
+    public function popular()
+    {
+        $this->builder->getQuery()->orders = [];
+        return $this->builder->orderByDesc('replies_count');
     }
 }
