@@ -21,7 +21,6 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param User|null $user
      * @return TestCase
      */
     protected function signIn($user = null){
