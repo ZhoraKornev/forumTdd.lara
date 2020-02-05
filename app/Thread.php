@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Filters\ThreadFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -30,6 +31,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $channel_id
  * @property-read \App\Channel $channel
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereChannelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread filter($filter)
  */
 class Thread extends Model
 {
@@ -64,6 +66,16 @@ class Thread extends Model
     public function addReply($reply)
     {
         $this->replies()->create($reply);
+    }
+
+    /**
+     * @param $query
+     * @param ThreadFilter $filters
+     * @return mixed
+     */
+    public function scopeFilter($query, $filters)
+    {
+        return $filters->apply($query);
     }
 
 }
