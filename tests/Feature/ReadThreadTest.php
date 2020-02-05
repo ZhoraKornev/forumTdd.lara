@@ -16,7 +16,7 @@ class ReadThreadTest extends TestCase
      */
     private $thread;
 
-    public function setUp() :void
+    public function setUp(): void
     {
         parent::setUp();
         $this->thread = factory('App\Thread')->create();
@@ -41,9 +41,21 @@ class ReadThreadTest extends TestCase
     public function a_user_can_replies_that_are_associate_with_a_single_thread()
     {
         /** @var Reply $reply */
-        $reply = factory('App\Reply')->create(['thread_id'=>$this->thread->id]);
+        $reply = factory('App\Reply')->create(['thread_id' => $this->thread->id]);
 
-        $this->get( $this->thread->path())
-        ->assertSee($reply->body);
+        $this->get($this->thread->path())
+            ->assertSee($reply->body);
+    }
+
+    /** @test */
+    public function a_user_can_filter_threads_according_to_a_channel()
+    {
+         $channel = create('App\Channel');
+        $threadInChannel = create('App\Thread',['channel_id'=>$channel->id]);
+        $threadNotInChannel = create('App\Thread');
+
+         $this->get('/threads/'.$channel->slug)
+             ->assertSee($threadInChannel->title)
+             ->assertDontSee($threadNotInChannel->title);
     }
 }

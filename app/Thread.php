@@ -27,6 +27,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Reply[] $replies
  * @property-read int|null $replies_count
  * @property-read int|null $creator
+ * @property int $channel_id
+ * @property-read \App\Channel $channel
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereChannelId($value)
  */
 class Thread extends Model
 {

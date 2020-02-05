@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Channel;
 use App\Thread;
 use Illuminate\Http\Request;
 
@@ -9,18 +10,24 @@ class ThreadsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index','show']);
+        $this->middleware('auth')->except(['index', 'show']);
     }
 
     /**
      * Display a listing of the resource.
      *
+     * @param Channel $channel
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Channel $channel)
     {
-        $threads = Thread::latest()->get();
-        return view('threads.index',['threads'=>$threads]);
+        if ($channel->exists){
+            $threads = $channel->threads()->latest()->get();
+        }
+        else{
+            $threads = Thread::latest()->get();
+        }
+        return view('threads.index', ['threads' => $threads]);
     }
 
     /**
@@ -38,14 +45,20 @@ class ThreadsController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'title' => 'required',
+            'body' => 'required',
+            'channel_id' => 'required|exists:channels,id',
+        ]);
         $thread = Thread::create([
-            'title' =>request('title'),
-            'body' =>request('body'),
-            'channel_id' =>request('channel_id'),
-            'user_id' =>auth()->id(),
+            'title' => request('title'),
+            'body' => request('body'),
+            'channel_id' => request('channel_id'),
+            'user_id' => auth()->id(),
         ]);
 
         return redirect($thread->path());
@@ -58,9 +71,9 @@ class ThreadsController extends Controller
      * @param \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
-    public function show($channelId,Thread $thread)
+    public function show($channelId, Thread $thread)
     {
-        return view('threads.show',compact('thread'));
+        return view('threads.show', compact('thread'));
     }
 
     /**
