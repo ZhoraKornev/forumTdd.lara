@@ -17,9 +17,8 @@
             <article>
                 <div class="flex-column align-content-center">
                     <h4 class="flex-grow-1">
-                        <a href="{{$thread->path()}}">
-                            {{$thread->title}}
-                        </a>
+                        <a href="{{route('profile',$thread->creator)}}">{{$thread->title}}</a>
+                        <a href="{{$thread->path()}}">{{$thread->title}}</a>
 
                     </h4>
                     {{$thread->created_at->diffForHumans()}}

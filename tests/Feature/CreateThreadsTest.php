@@ -71,11 +71,11 @@ class CreateThreadsTest extends TestCase
     public function a_thread_requires_a_valid_channel()
     {
 
-        factory('App\Channel',2)->create();
+        factory('App\Channel', 2)->create();
         $this->publishThread(['channel_id' => null])
             ->assertSessionHasErrors('channel_id');
 
-        $this->publishThread(['channel_id' => random_int(999999,9999999)])
+        $this->publishThread(['channel_id' => random_int(999999, 9999999)])
             ->assertSessionHasErrors('channel_id');
     }
 
@@ -92,5 +92,33 @@ class CreateThreadsTest extends TestCase
 
     }
 
+    /** @test */
+    public function authorised_person_can_delete_threads()
+    {
+        $this->signIn();
+
+        $thread = create('App\Thread',['user_id'=>auth()->id()]);
+        $reply = create('App\Reply', ['thread_id' => $thread->id]);
+        $response = $this->json('DELETE', $thread->path());
+        $response->assertStatus(204);
+        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+    }
+
+    /** @test */
+    public function unauthorised_users_may_not_delete_threads()
+    {
+        $this->withExceptionHandling();
+        $thread = create('App\Thread');
+        $this->delete( $thread->path())->assertRedirect('login');
+        $this->signIn();
+        $this->delete( $thread->path())->assertStatus(403);
+    }
+
+    /** @test */
+        public function thread_may_only_be_deleted_by_those_who_have_permission()
+        {
+
+        }
 
 }

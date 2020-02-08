@@ -7,7 +7,15 @@
             <div class="col-md-8">
                 <div class="card">
                     @php /** @var \App\Thread $thread */@endphp
-                    <div class="card-header"><a href="{{route('profile',$thread->creator)}}">{{$thread->creator->name}}</a> posted: {{$thread->title}}</div>
+                    <div class="card-header"><a href="{{route('profile',$thread->creator)}}">{{$thread->creator->name}}</a> posted: {{$thread->title}}
+                        @can('update',$thread)
+                            <form method="POST" action="{{$thread->path()}}">
+                                @CSRF
+                                @method('DELETE');
+                                <button type="submit" class="btn btn-link">Delete thread</button>
+                            </form>
+                        @endcan
+                    </div>
                     <div class="card-body">
                         <article>
                             <div class="text-body">
@@ -43,7 +51,7 @@
                 <div class="card-body">
                     <p>
                         This thread was created {{$thread->created_at->diffForHumans()}} by
-                        <a href="#">{{$thread->creator->name}}</a> and currently has  {{$thread->replies_count}} {{\Illuminate\Support\Str::plural('comment',$thread->replies_count)}}
+                        <a href="#">{{$thread->creator->name}}</a> and currently has {{$thread->replies_count}} {{\Illuminate\Support\Str::plural('comment',$thread->replies_count)}}
                     </p>
 
                     <hr>

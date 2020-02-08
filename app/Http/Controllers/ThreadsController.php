@@ -25,7 +25,7 @@ class ThreadsController extends Controller
     public function index(Channel $channel, ThreadFilter $filters)
     {
         $threads = $this->getThreads($channel, $filters);
-        if (\request()->wantsJson()){
+        if (\request()->wantsJson()) {
             return $threads;
         }
 
@@ -77,8 +77,8 @@ class ThreadsController extends Controller
     {
 
         return view('threads.show', [
-            'thread' =>$thread,
-            'replies' =>$thread->replies()->paginate(5)
+            'thread' => $thread,
+            'replies' => $thread->replies()->paginate(5)
         ]);
     }
 
@@ -108,12 +108,24 @@ class ThreadsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Thread $thread
-     * @return Response
+     * @param Channel $channel
+     * @param Thread $thread
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|Response
+     * @throws \Exception
      */
-    public function destroy(Thread $thread)
+    public function destroy(Channel $channel, Thread $thread)
     {
-        //
+        $this->authorize('update',$thread);
+        if ($thread->user_id != auth()->id()){
+            abort(403,'Not enough peivilegeous');
+
+        }
+
+        $thread->delete();
+        if (\request()->wantsJson()){
+            return \response([], 204);
+        }
+        return redirect('threads');
     }
 
     /**
