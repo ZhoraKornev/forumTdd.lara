@@ -33,6 +33,8 @@ use Illuminate\Notifications\Notifiable;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Thread[] $threads
  * @property-read int|null $threads_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Activity[] $activities
+ * @property-read int|null $activities_count
  */
 class User extends Authenticatable
 {
@@ -73,6 +75,11 @@ class User extends Authenticatable
     public function threads()
     {
         return $this->hasMany(Thread::class)->latest();
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
     }
 
 }

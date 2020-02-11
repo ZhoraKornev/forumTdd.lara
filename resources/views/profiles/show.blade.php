@@ -1,6 +1,6 @@
 @php
     /** @var \App\User $profileUser */
-    /** @var \App\Thread $threads */
+    /** @var \App\Activity[] $activities */
 @endphp
 @extends('layouts.app')
 
@@ -12,25 +12,13 @@
                 <small>Since {{$profileUser->created_at->diffForHumans()}}</small>
             </h1>
         </div>
-        @foreach ($threads as $thread)
-            @php /** @var \App\Thread $thread */@endphp
-            <article>
-                <div class="flex-column align-content-center">
-                    <h4 class="flex-grow-1">
-                        <a href="{{route('profile',$thread->creator)}}">{{$thread->title}}</a>
-                        <a href="{{$thread->path()}}">{{$thread->title}}</a>
-
-                    </h4>
-                    {{$thread->created_at->diffForHumans()}}
-                    <a href="{{$thread->path()}}">{{$thread->replies_count}} {{\Illuminate\Support\Str::plural('reply',$thread->replies_count)}} </a>
-                </div>
-                <div class="text-body float-none">
-                    {{ $thread->body }}
-                </div>
-            </article>
+        @foreach ($activities as $date => $activity)
+            <div class="h3">{{$date}}</div>
+            @php /** @var \App\Activity $activity */@endphp
+            @foreach ($activity as $record)
+                @include("profiles.activity.{$record->type}",['activity'=>$record])
+            @endforeach
             <hr>
         @endforeach
-{{$threads->links()}}
-
     </div>
 @endsection

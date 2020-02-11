@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\User $owner
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Favorite[] $favorites
  * @property-read int|null $favorites_count
+ * @property-read \App\Thread $thread
  */
 class Reply extends Model
 {
@@ -37,5 +38,10 @@ class Reply extends Model
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function thread()
+    {
+        return $this->belongsTo(Thread::class);
     }
 }
