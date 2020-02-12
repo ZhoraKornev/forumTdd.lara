@@ -46,7 +46,7 @@ class ThreadsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
@@ -56,6 +56,7 @@ class ThreadsController extends Controller
             'body' => 'required',
             'channel_id' => 'required|exists:channels,id',
         ]);
+        /** @var Thread $thread */
         $thread = Thread::create([
             'title' => request('title'),
             'body' => request('body'),
@@ -63,7 +64,7 @@ class ThreadsController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        return redirect($thread->path());
+        return redirect($thread->path())->with(['success' => "Успешно сохранено"]);
     }
 
     /**

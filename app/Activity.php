@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Activity whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Activity whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Activity whereUserId($value)
+ * @method static count()
  */
 class Activity extends Model
 {

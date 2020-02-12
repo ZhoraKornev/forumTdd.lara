@@ -16,7 +16,9 @@
             <div class="h3">{{$date}}</div>
             @php /** @var \App\Activity $activity */@endphp
             @foreach ($activity as $record)
+                @if(view()->exists('profiles.activity.'.$record->type))
                 @include("profiles.activity.{$record->type}",['activity'=>$record])
+                @endif
             @endforeach
             <hr>
         @endforeach
