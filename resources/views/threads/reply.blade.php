@@ -2,7 +2,7 @@
     <div class="card-header"><a href="{{route('profile',$reply->owner)}}"> {{$reply->owner->name}}</a> said {{$reply->created_at->diffForHumans()}}</div>
     <div>
         {{$reply->favorites_count}}
-        <form method="POST" action="{{'/replies/'.$reply->id.'/favorite'}}" >
+        <form method="POST" action="{{'/replies/'.$reply->id.'/favorite'}}">
             {{csrf_field()}}
             <button type="submit" class="btn btn-primary" {{ $reply->isFavorited() ? 'disabled' :''}} >
                 Favorite
@@ -16,4 +16,13 @@
         </div>
         <hr>
     </div>
+    @can('update',$reply)
+        <form method="POST" action="{{'/replies/'.$reply->id}}">
+            @method('DELETE')
+            {{csrf_field()}}
+            <button type="submit" class="btn btn-danger align-content-center">
+                Delete reply
+            </button>
+        </form>
+    @endcan
 </div>

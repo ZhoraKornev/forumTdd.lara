@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Reply;
 use App\Thread;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class RepliesController extends Controller
 {
@@ -23,9 +26,9 @@ class RepliesController extends Controller
     public function store($channelId, Thread $thread)
     {
         $this->validate(request(),
-        [
-            'body' => 'required'
-        ]);
+            [
+                'body' => 'required'
+            ]);
 
         $thread->addReply([
             'body' => request('body'),
@@ -34,4 +37,19 @@ class RepliesController extends Controller
 
         return back();
     }
+
+    /**
+     * @param Reply $reply
+     * @return ResponseFactory|RedirectResponse|Response
+     * @throws \Exception
+     */
+    public function destroy(Reply $reply)
+    {
+
+        $this->authorize('update', $reply);
+        $reply->delete();
+        return back();
+
+    }
+
 }

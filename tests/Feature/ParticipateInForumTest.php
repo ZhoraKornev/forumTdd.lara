@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Reply;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
@@ -42,7 +43,34 @@ class ParticipateInForumTest extends TestCase
         $reply = make('App\Reply', ['body' => null]);
 
         $this->post($thread->path() . '/replies', $reply->toArray())
-        ->assertSessionHasErrors('body');
+            ->assertSessionHasErrors('body');
+
+    }
+
+    /** @test */
+    public function unauthorised_user_cannot_delete_replies()
+    {
+        $this->withExceptionHandling();
+        $reply = create(Reply::class);
+
+        $this->delete("/replies/{$reply->id}")
+            ->assertRedirect('login');
+
+        $this->signIn()
+            ->delete("/replies/{$reply->id}")
+            ->assertStatus(403);
+
+    }
+
+    public function authorised_users_can_delete_replies()
+    {
+        $reply = create(Reply::class, ['user_id' => auth()->id()]);
+
+        $this->signIn()
+            ->delete("/replies/{$reply->id}")->assertStatus(302);
+
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+
 
     }
 }
