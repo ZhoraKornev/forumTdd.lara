@@ -64,7 +64,7 @@ class ThreadsController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        return redirect($thread->path())->with(['success' => "Успешно сохранено"]);
+        return redirect($thread->path())->with(['flash' => "Успешно создано"]);
     }
 
     /**

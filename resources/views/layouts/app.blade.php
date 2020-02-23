@@ -24,10 +24,11 @@
 <body>
 <div id="app">
     @include('layouts.nav')
-    @include('layouts.messages')
     <main class="py-4">
         @yield('content')
     </main>
+    <flash message="{{session()->get('flash')}}"></flash>
+
 </div>
 </body>
 </html>

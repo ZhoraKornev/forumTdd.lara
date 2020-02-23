@@ -11,18 +11,30 @@
     </div>
 
     <div class="card-body">
-        <div class="text-body">
-            {{ $reply->body }}
+        <div v-if="editing">
+            <textarea></textarea>
         </div>
+        <div v-else>
+            <div class="text-body">
+                {{ $reply->body }}
+            </div>
+        </div>
+
         <hr>
     </div>
     @can('update',$reply)
-        <form method="POST" action="{{'/replies/'.$reply->id}}">
-            @method('DELETE')
-            {{csrf_field()}}
-            <button type="submit" class="btn btn-danger align-content-center">
-                Delete reply
+        <div class="card-footer align-content-center">
+            <button type="submit" class="btn btn-warning btn-xs flex-xl-shrink-1">
+                Edit reply
             </button>
-        </form>
+
+            <form method="POST" action="{{'/replies/'.$reply->id}}">
+                @method('DELETE')
+                {{csrf_field()}}
+                <button type="submit" class="btn btn-danger ">
+                    Delete reply
+                </button>
+            </form>
+        </div>
     @endcan
 </div>
