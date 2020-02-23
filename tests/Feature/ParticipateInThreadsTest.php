@@ -7,7 +7,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class ParticipateInForumTest extends TestCase
+class ParticipateInThreadsTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -71,6 +71,33 @@ class ParticipateInForumTest extends TestCase
 
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
 
+
+    }
+
+    /** @test */
+    public function authorized_users_can_update_replies()
+    {
+        $this->signIn();
+        $reply = create(Reply::class, ['user_id' => auth()->id()]);
+        $updatedBody = 'new body';
+        $this->patch("/replies/{$reply->id}",['body' => $updatedBody]);
+        $this->assertDatabaseHas('replies',['id' =>$reply->id,'body' => $updatedBody]);
+
+    }
+
+
+    /** @test */
+    public function unauthorised_user_cannot_update_replies()
+    {
+        $this->withExceptionHandling();
+        $reply = create(Reply::class);
+
+        $this->patch("/replies/{$reply->id}")
+            ->assertRedirect('login');
+
+        $this->signIn()
+            ->patch("/replies/{$reply->id}")
+            ->assertStatus(403);
 
     }
 }

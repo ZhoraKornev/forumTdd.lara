@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -26,6 +28,7 @@ Route::post('threads', 'ThreadsController@store');
 Route::get('/threads/{channel}/', 'ThreadsController@index');
 
 Route::delete('/replies/{reply}/', 'RepliesController@destroy');
+Route::patch('/replies/{reply}/', 'RepliesController@update');
 
 Route::post('threads/{channel}/{thread}/replies', 'RepliesController@store');
 Route::post('replies/{reply}/favorite', 'FavoriteController@store');

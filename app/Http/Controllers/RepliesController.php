@@ -52,4 +52,14 @@ class RepliesController extends Controller
 
     }
 
+    /**
+     * @param Reply $reply
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function update(Reply $reply)
+    {
+        $this->authorize('update', $reply);
+        $reply->update(\request(['body']));
+    }
+
 }
